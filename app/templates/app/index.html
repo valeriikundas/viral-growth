@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        {% if error %}
+            <div class="alert alert-primary" role="alert">
+                {{ error }}
+            </div>
+        {% endif %}
+
+        {% for user in users %}
+            <div style="border: solid 1px; margin: 10px;">
+                <h3>{{ user.email }}</h3>
+                {% if user.description %}
+                    <p>{{ user.description }}</p>
+                {% else %}
+                    <p>no description provided</p>
+                {% endif %}
+
+                {% if user.images %}
+                    {% for image in user.images %}
+                    <img class="img-fluid" src="{{ image }}" alt="profile photo" style="height:200px">
+                    {% endfor %}
+                {% else %}
+                    <p>list of profile images is empty</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

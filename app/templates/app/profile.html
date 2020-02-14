@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    {% if description %}
+        <p>{{ description }}</p>
+    {% else %}
+        <p>no description provided</p>
+    {% endif %}
+
+    {% if profile_images %}
+    <div>
+        {% for image in profile_images %}
+            <img class="img-fluid" src="{{ image }}">
+        {% endfor %}
+    </div>
+    {% else %}
+        <p>no images provided</p>
+    {% endif %}
+
+    <a class="btn btn-primary" href="{% url 'profile_edit' %}">edit profile</a>
+    <h3>invitations created by user - {{ count_created_invitations }}</h3>
+    <h3>invitations used - {{ count_used_invitations }}</h3>
+</div>
+{% endblock %}
