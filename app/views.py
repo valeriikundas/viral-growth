@@ -34,7 +34,14 @@ def login_view(request, token=None):
             return redirect("index", error="specify email and password")
 
         if User.user_exists(email):
-            user = User.objects.get(email=email)
+            user = authenticate(request, email=email, password=password)
+            if user is None:
+                return render(
+                    request,
+                    "app/index.html",
+                    context={"error": "wrong email or password"},
+                )
+
             login(request, user)
             return redirect("index")
 
