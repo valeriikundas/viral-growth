@@ -1,0 +1,16 @@
+<div style="border: solid 1px; margin: 10px;">
+    {% if user.images %}
+        {% for image in user.images %}
+        <img class="img-fluid" src="{{ image }}" alt="profile photo" style="height:200px">
+        {% endfor %}
+    {% else %}
+        <p>list of profile images is empty</p>
+    {% endif %}
+
+    <h3>{{ user.email }}</h3>
+    {% if user.description %}
+        <p>{{ user.description }}</p>
+    {% else %}
+        <p>no description provided</p>
+    {% endif %}
+</div>

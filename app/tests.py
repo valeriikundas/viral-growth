@@ -7,19 +7,25 @@ from .models import Invitation, User
 
 @pytest.fixture
 def user1():
-    user = User.objects.create(email="email@mail.com", password="password")
+    user: User = User.objects.create(email="email@mail.com")
+    user.set_password("password")
+    user.save()
     return user
 
 
 @pytest.fixture
 def user2():
-    user = User.objects.create(email="verynice@mail.com", password="jamaica999")
+    user = User.objects.create(email="verynice@mail.com")
+    user.set_password("jamaica999")
+    user.save()
     return user
 
 
 @pytest.fixture
 def user3():
-    user = User.objects.create(email="tom@mail.com", password="jama123")
+    user = User.objects.create(email="tom@mail.com")
+    user.set_password("jama123")
+    user.save()
     return user
 
 
@@ -107,11 +113,7 @@ class TestInvitation:
 @pytest.mark.django_db
 def test_invitation_view(user1: User):
     client1 = Client()
-    response = client1.post(
-        reverse("login"),
-        data={"email": user1.email, "password": user1.password},
-        follow=True,
-    )
+    client1.force_login(user1)
     response = client1.get(reverse("invite"))
     invitation_link = response.context.get("invitation_link")
 

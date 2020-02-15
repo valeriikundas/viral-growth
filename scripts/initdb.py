@@ -40,7 +40,8 @@ def run():
         email = get_random_email()
         password = get_random_password()
         print(email)
-        user = User.objects.create(email=email, password=password)
+        user: User = User.objects.create(email=email)
+        user.set_password(password)
         user.description = get_random_description()
         images = get_random_images()
         for image in images:

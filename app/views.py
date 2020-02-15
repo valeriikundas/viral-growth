@@ -6,11 +6,22 @@ from django.shortcuts import redirect, render, reverse
 from .forms import ProfileEditForm
 from .models import Invitation, ProfileImage, User
 
+
+def get_card_template(user):
+    card_template = "app/profile_cards/1.html"
+    if user.is_authenticated:
+        card_template = user.get_card_template_name()
+    return card_template
+
+
 # shows profile description and images of all users
 # I left it without pagination, but in real projects,
 # pagination is of course required
 def index_view(request: HttpRequest):
-    context = {"users": User.get_users_data()}
+    context = {
+        "users": User.get_users_data(),
+        "card_template": get_card_template(request.user),
+    }
     return render(request, "app/index.html", context)
 
 
@@ -34,7 +45,7 @@ def login_view(request, token=None):
             return redirect("index", error="specify email and password")
 
         if User.user_exists(email):
-            user = authenticate(request, email=email, password=password)
+            user = authenticate(request, username=email, password=password)
             if user is None:
                 return render(
                     request,
@@ -45,7 +56,9 @@ def login_view(request, token=None):
             login(request, user)
             return redirect("index")
 
-        user = User.objects.create(email=email, password=password)
+        user: User = User.objects.create(email=email)
+        user.set_password(password)
+        user.save()
 
         if token is not None:
             Invitation.use(token, user)
@@ -80,6 +93,7 @@ def profile_view(request, profile_id=None):
         "profile_images": user.get_image_urls(),
         "count_created_invitations": user.get_count_of_created_invitations(),
         "count_used_invitations": user.get_count_of_used_invitations(),
+        "card_template": user.card_template_id,
     }
     return render(request, "app/profile.html", context)
 
@@ -98,6 +112,10 @@ def profile_edit_view(request):
             new_image = form.cleaned_data.get("new_image")
             if new_image is not None:
                 ProfileImage.create(user, new_image)
+
+            card_template_id = form.cleaned_data.get("card_template_id")
+            if card_template_id is not None:
+                user.card_template_id = card_template_id
 
             user.save()
             return redirect("profile")

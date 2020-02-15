@@ -1,5 +1,6 @@
-from django.conf import settings
 from typing import List
+
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import models
@@ -10,6 +11,7 @@ from .utils import get_random_string, token_generator
 class User(AbstractUser):
     email = models.EmailField(null=False)
     description = models.TextField(blank=True, null=False)
+    card_template_id = models.IntegerField(default=1)
 
     def __str__(self):
         return f"<User {self.email}>"
@@ -55,6 +57,9 @@ class User(AbstractUser):
             }
             for user in User.objects.all()
         ]
+
+    def get_card_template_name(self):
+        return f"app/profile_cards/{self.card_template_id}.html"
 
 
 class ProfileImage(models.Model):
@@ -113,5 +118,3 @@ class Invitation(models.Model):
     @staticmethod
     def get_by_token(token: str) -> "Invitation":
         return Invitation.objects.filter(token=token).first()
-
-

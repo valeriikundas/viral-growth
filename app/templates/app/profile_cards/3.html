@@ -1,0 +1,25 @@
+<div style="border: solid 1px; margin: 10px;">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm">
+                <h3>{{ user.email }}</h3>
+            </div>
+            <div class="col-sm">
+                {% if user.description %}
+                    <p>{{ user.description }}</p>
+                {% else %}
+                    <p>no description provided</p>
+                {% endif %}
+            </div>
+            <div class="col-sm">
+                {% if user.images %}
+                    {% for image in user.images %}
+                    <img class="img-fluid" src="{{ image }}" alt="profile photo" style="height:200px">
+                    {% endfor %}
+                {% else %}
+                    <p>list of profile images is empty</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
