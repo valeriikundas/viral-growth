@@ -1,13 +1,7 @@
 from django.urls import path
 
-from .views import (
-    index_view,
-    invite_view,
-    login_view,
-    logout_view,
-    profile_edit_view,
-    profile_view,
-)
+from .views import (index_view, invite_view, login_view, logout_view,
+                    profile_edit_view, profile_view)
 
 urlpatterns = [
     path("", index_view, name="index"),
